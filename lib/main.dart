@@ -51,7 +51,7 @@ class _PinSecurityGateState extends State<PinSecurityGate> {
           });
         } else {
           setState(() {
-            _errorMessage = "Galat PIN! Dubara koshish karein.";
+            _errorMessage = "Galat PIN! Sahi PIN enter karein.";
             _enteredPin = "";
           });
         }
@@ -78,7 +78,7 @@ class _PinSecurityGateState extends State<PinSecurityGate> {
         child: Column(
           children: [
             const Spacer(),
-            const Icon(Icons.lock_rounded, size: 50, color: Color(0xFF38BDF8)),
+            const Icon(Icons.lock_rounded, size: 55, color: Color(0xFF38BDF8)),
             const SizedBox(height: 16),
             const Text(
               "NeeoM",
