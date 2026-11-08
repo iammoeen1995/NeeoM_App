@@ -6,15 +6,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
-      - run: flutter pub get
-      - run: flutter build apk --release
-      - uses: actions/upload-artifact@v4
+
+      - name: Generate Android Native Files
+        run: |
+          mkdir temp_app
+          cd temp_app
+          flutter create --org com.neoom --project-name neoom_app .
+          cp -r android ..
+          cd ..
+          rm -rf temp_app
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Compile Release APK
+        run: flutter build apk --release
+
+      - name: Save APK Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: NeeoM-APK
+          name: NeeoM-Release-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           
