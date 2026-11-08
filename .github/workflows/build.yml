@@ -6,13 +6,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Setup Flutter
@@ -21,24 +21,16 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
 
-      - name: Generate Android Native Files
+      - name: Create Clean Android Structure
         run: |
-          mkdir temp_app
-          cd temp_app
-          flutter create --org com.neoom --project-name neoom_app .
-          cp -r android ..
-          cd ..
-          rm -rf temp_app
+          rm -rf android
+          flutter create . --org com.neoom --project-name neoom_app --platforms=android
 
-      - name: Get Dependencies
-        run: flutter pub get
+      - name: Compile Debug APK
+        run: flutter build apk --debug
 
-      - name: Compile Release APK
-        run: flutter build apk --release
-
-      - name: Save APK Artifact
+      - name: Upload NeeoM APK
         uses: actions/upload-artifact@v4
         with:
-          name: NeeoM-Release-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
-          
+          name: NeeoM-APK
+          path: build/app/outputs/flutter-apk/app-debug.apk
